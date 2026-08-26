@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel — Naiara Tattoo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d0f0d;
+            --bg-alt: #141712;
+            --bg-card: #171a15;
+            --line: rgba(242, 237, 224, 0.10);
+            --line-strong: rgba(242, 237, 224, 0.22);
+            --text: #f2ede0;
+            --text-muted: #b6b2a3;
+            --text-faint: #79776b;
+            --sage: #8fa17f;
+            --sage-soft: rgba(143, 161, 127, 0.14);
+            --gold: #c8a76b;
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'Jost', sans-serif;
+            --radius: 2px;
+            --ease: cubic-bezier(.4, 0, .2, 1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-weight: 300;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: inherit; text-decoration: none; }
+        button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+        .admin-shell { display: flex; min-height: 100vh; }
+        .admin-sidebar {
+            width: 230px;
+            background: var(--bg-alt);
+            border-right: 1px solid var(--line);
+            padding: 1.6rem 1.2rem;
+            display: none;
+            flex-direction: column;
+            gap: .15rem;
+            flex-shrink: 0;
+        }
+        @media (min-width: 820px) { .admin-sidebar { display: flex; } }
+        .admin-sidebar .brand {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            margin-bottom: 1.8rem;
+            letter-spacing: .02em;
+        }
+        .admin-sidebar .brand em { color: var(--sage); font-style: italic; }
+        .admin-sidebar a {
+            padding: .65rem .8rem;
+            font-size: .85rem;
+            color: var(--text-muted);
+            border-left: 2px solid transparent;
+            display: block;
+            transition: .2s var(--ease);
+        }
+        .admin-sidebar a:hover { color: var(--text); background: rgba(255,255,255,.02); }
+        .admin-sidebar a.active {
+            color: var(--text);
+            border-left-color: var(--sage);
+            background: rgba(255,255,255,.02);
+        }
+        .admin-sidebar .back {
+            margin-top: 1.4rem;
+            border-top: 1px solid var(--line);
+            padding-top: 1rem;
+            color: var(--text-faint);
+            font-size: .8rem;
+        }
+        .admin-main {
+            flex: 1;
+            padding: 1.4rem 1.2rem 3rem;
+            min-width: 0;
+        }
+        @media (min-width: 640px) {
+            .admin-main { padding: 2.2rem 2.4rem 3.5rem; }
+        }
+        .admin-mobile-tabs {
+            display: flex;
+            overflow-x: auto;
+            gap: .45rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: .35rem;
+        }
+        @media (min-width: 820px) { .admin-mobile-tabs { display: none; } }
+        .admin-mobile-tabs a {
+            flex-shrink: 0;
+            font-size: .72rem;
+            padding: .4rem .85rem;
+            border: 1px solid var(--line-strong);
+            border-radius: 20px;
+            color: var(--text-muted);
+        }
+        .admin-mobile-tabs a.active {
+            color: var(--sage);
+            border-color: var(--sage);
+        }
+        .admin-view { display: none; }
+        .admin-view.active { display: block; }
+        .admin-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.8rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .admin-topbar h2 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .7rem 1.3rem;
+            border: 1px solid var(--line-strong);
+            border-radius: var(--radius);
+            font-size: .82rem;
+            letter-spacing: .04em;
+            background: transparent;
+            color: var(--text);
+            transition: .25s var(--ease);
+        }
+        .btn:hover { border-color: var(--sage); color: var(--sage); }
+        .btn-solid {
+            background: var(--sage);
+            color: #0d0f0d;
+            border-color: var(--sage);
+        }
+        .btn-solid:hover { background: transparent; color: var(--sage); }
+        .stat-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(2, 1fr);
+            margin-bottom: 2rem;
+        }
+        @media (min-width: 700px) {
+            .stat-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--line);
+            padding: 1.25rem;
+        }
+        .stat-card .n {
+            font-family: var(--font-display);
+            font-size: 1.9rem;
+        }
+        .stat-card .l {
+            font-size: .68rem;
+            color: var(--text-faint);
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            margin-top: .3rem;
+        }
+        .admin-table-wrap { overflow-x: auto; }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .83rem;
+        }
+        .admin-table th {
+            text-align: left;
+            color: var(--text-faint);
+            font-weight: 400;
+            font-size: .66rem;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            padding: .7rem .55rem;
+            border-bottom: 1px solid var(--line-strong);
+        }
+        .admin-table td {
+            padding: .8rem .55rem;
+            border-bottom: 1px solid var(--line);
+            color: var(--text-muted);
+            vertical-align: middle;
+        }
+        .admin-table tr:hover td { background: rgba(255,255,255,.015); }
+        .badge {
+            font-size: .66rem;
+            padding: .25rem .6rem;
+            border-radius: 20px;
+            letter-spacing: .03em;
+            white-space: nowrap;
+        }
+        .badge.pending { background: rgba(200,167,107,.14); color: var(--gold); }
+        .badge.confirmed { background: rgba(143,161,127,.16); color: var(--sage); }
+        .badge.completed { background: rgba(150,150,150,.14); color: var(--text-muted); }
+        .badge.cancelled { background: rgba(190,90,90,.14); color: #c98080; }
+        .mini-btn {
+            font-size: .7rem;
+            color: var(--text-muted);
+            border: 1px solid var(--line-strong);
+            padding: .3rem .6rem;
+            border-radius: var(--radius);
+            margin: 0 .2rem .2rem 0;
+            transition: .2s;
+        }
+        .mini-btn:hover {
+            border-color: var(--sage);
+            color: var(--sage);
+            background: var(--sage-soft);
+        }
+        .row-actions { display: flex; flex-wrap: wrap; gap: .25rem; }
+        .field { margin-bottom: 1rem; }
+        .field label {
+            display: block;
+            font-size: .72rem;
+            color: var(--text-muted);
+            margin-bottom: .35rem;
+            letter-spacing: .03em;
+        }
+        .field input, .field textarea {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--line-strong);
+            color: var(--text);
+            padding: .7rem .85rem;
+            font-family: var(--font-body);
+            font-size: .9rem;
+            border-radius: var(--radius);
+        }
+        .field input:focus, .field textarea:focus {
+            outline: 1px solid var(--sage);
+            border-color: var(--sage);
+        }
+        .field-row {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: 1fr;
+        }
+        @media (min-width: 560px) {
+            .field-row { grid-template-columns: 1fr 1fr; }
+        }
+        .grid-3 {
+            display: grid;
+            gap: 1.2rem;
+            grid-template-columns: 1fr;
+        }
+        @media (min-width: 700px) {
+            .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        }
+        .work-card {
+            background: var(--bg-card);
+            border: 1px solid var(--line);
+            overflow: hidden;
+        }
+        .work-card img {
+            width: 100%;
+            aspect-ratio: 4/5;
+            object-fit: cover;
+            display: block;
+        }
+        .work-card .cap {
+            padding: .8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: .5rem;
+            font-size: .78rem;
+            color: var(--text-faint);
+        }
+        .empty {
+            color: var(--text-faint);
+            font-size: .88rem;
+            padding: 1rem 0;
+        }
+        .hint {
+            font-size: .78rem;
+            color: var(--text-faint);
+            margin-top: -1rem;
+            margin-bottom: 1.5rem;
+            max-width: 52ch;
+        }
+    </style>
+</head>
+<body>
+<div class="admin-shell">
+    <aside class="admin-sidebar">
+        <span class="brand">Naiara <em>Studio</em></span>
+        <a class="active" data-admin="dashboard">Dashboard</a>
+        <a data-admin="agenda">Agenda</a>
+        <a data-admin="agendamentos">Agendamentos</a>
+        <a data-admin="clientes">Clientes</a>
+        <a data-admin="servicos">Serviços</a>
+        <a data-admin="portfolio">Portfólio</a>
+        <a data-admin="disponibilidade">Disponibilidade</a>
+        <a data-admin="bloqueadas">Datas bloqueadas</a>
+        <a data-admin="config">Configurações</a>
+        <a href="/logout" class="back">Sair do painel</a>
+        <a href="/" class="back" style="margin-top:.4rem;border-top:none;padding-top:.4rem;">← Voltar ao site</a>
+    </aside>
+
+    <div class="admin-main">
+        <div class="admin-mobile-tabs">
+            <a class="active" data-admin="dashboard">Dashboard</a>
+            <a data-admin="agenda">Agenda</a>
+            <a data-admin="agendamentos">Agendamentos</a>
+            <a data-admin="clientes">Clientes</a>
+            <a data-admin="servicos">Serviços</a>
+            <a data-admin="portfolio">Portfólio</a>
+            <a data-admin="disponibilidade">Disponib.</a>
+            <a data-admin="bloqueadas">Bloqueadas</a>
+            <a data-admin="config">Config</a>
+        </div>
+
+        <div class="admin-view active" data-view="dashboard">
+            <div class="admin-topbar">
+                <h2>Dashboard</h2>
+                <button class="btn" type="button" onclick="limparBanco()">Limpar antigos</button>
+            </div>
+            <p class="hint">
+                Remove cancelados (30+ dias) e concluídos (90+ dias). Pendentes e confirmados ficam.
+                Clientes nunca são apagados por aqui.
+            </p>
+            <div class="stat-grid">
+                <div class="stat-card"><div class="n" id="dashboardHoje">0</div><div class="l">Hoje</div></div>
+                <div class="stat-card"><div class="n" id="dashboardPendentes">0</div><div class="l">Pendentes</div></div>
+                <div class="stat-card"><div class="n" id="dashboardConfirmados">0</div><div class="l">Confirmados</div></div>
+                <div class="stat-card"><div class="n" id="dashboardCancelados">0</div><div class="l">Cancelados</div></div>
+            </div>
+        </div>
+
+        <div class="admin-view" data-view="agenda">
+            <div class="admin-topbar"><h2>Agenda</h2></div>
+            <p class="hint">Só pendentes e confirmados de hoje em diante (fila de trabalho).</p>
+            <div class="admin-table-wrap">
+                <table class="admin-table" id="agendaTable"></table>
+            </div>
+        </div>
+
+        <div class="admin-view" data-view="agendamentos">
+            <div class="admin-topbar">
+                <h2>Agendamentos</h2>
+                <button class="btn" type="button" onclick="limparBanco()">Limpar antigos</button>
+            </div>
+            <p class="hint">Histórico completo (todos os status).</p>
+            <div class="admin-table-wrap">
+                <table class="admin-table" id="agendamentosTable"></table>
+            </div>
+        </div>
+
+        <div class="admin-view" data-view="clientes">
+            <div class="admin-topbar"><h2>Clientes</h2></div>
+            <p class="hint">Cadastro de contatos. Continua mesmo se o agendamento for excluído.</p>
+            <div class="admin-table-wrap">
+                <table class="admin-table" id="clientesTable"></table>
+            </div>
+        </div>
+
+        <div class="admin-view" data-view="servicos">
+            <div class="admin-topbar">
+                <h2>Serviços</h2>
+                <button class="btn btn-solid" type="button" onclick="criarServico()">+ Novo serviço</button>
+            </div>
+            <div class="admin-table-wrap">
+                <table class="admin-table" id="servicosTable"></table>
+            </div>
+        </div>
+
+        <div class="admin-view" data-view="portfolio">
+            <div class="admin-topbar">
+                <h2>Portfólio</h2>
+                <button class="btn btn-solid" type="button" onclick="criarPortfolio()">+ Adicionar imagem</button>
+            </div>
+            <div class="grid-3" id="adminPortfolioGrid"></div>
+        </div>
+
+        <div class="admin-view" data-view="disponibilidade">
+            <div class="admin-topbar"><h2>Disponibilidade</h2></div>
+            <div class="admin-table-wrap">
+                <table class="admin-table" id="dispoTable"></table>
+            </div>
+        </div>
+
+        <div class="admin-view" data-view="bloqueadas">
+            <div class="admin-topbar">
+                <h2>Datas bloqueadas</h2>
+                <button class="btn btn-solid" type="button" onclick="bloquearData()">+ Bloquear data</button>
+            </div>
+            <div id="bloqueadasList" class="empty">Carregando...</div>
+        </div>
+
+        <div class="admin-view" data-view="config">
+            <div class="admin-topbar"><h2>Configurações</h2></div>
+            <div class="field-row">
+                <div class="field">
+                    <label>Nome da tatuadora</label>
+                    <input id="configArtist" type="text">
+                </div>
+                <div class="field">
+                    <label>WhatsApp (só números — ex: 5571999999999)</label>
+                    <input id="configWhatsapp" type="text" placeholder="5571999999999">
+                </div>
+            </div>
+            <div class="field-row">
+                <div class="field">
+                    <label>Instagram</label>
+                    <input id="configInstagram" type="text">
+                </div>
+                <div class="field">
+                    <label>Duração padrão (minutos)</label>
+                    <input id="configDuration" type="text">
+                </div>
+            </div>
+            <div class="field">
+                <label>Descrição curta</label>
+                <textarea id="configDescription" rows="2"></textarea>
+            </div>
+            <button class="btn btn-solid" type="button" onclick="salvarConfig()" style="margin-top:.5rem;">
+                Salvar alterações
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function escapeHtml(v) {
+    if (v == null) return "";
+    return String(v)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+const badgeMap = {
+    pending: ["pending", "Pendente"],
+    confirmed: ["confirmed", "Confirmado"],
+    completed: ["completed", "Concluído"],
+    cancelled: ["cancelled", "Cancelado"]
+};
+
+const diasNome = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
+
+function goAdminView(view) {
+    document.querySelectorAll(".admin-view").forEach(el => el.classList.remove("active"));
+    const target = document.querySelector(`.admin-view[data-view="${view}"]`);
+    if (target) target.classList.add("active");
+    document.querySelectorAll("[data-admin]").forEach(el => {
+        el.classList.toggle("active", el.dataset.admin === view);
+    });
+    if (view === "agenda" || view === "agendamentos") carregarAgendamentos();
+    if (view === "clientes") carregarClientes();
+    if (view === "servicos") carregarServicos();
+    if (view === "portfolio") carregarPortfolio();
+    if (view === "disponibilidade") carregarDisponibilidade();
+    if (view === "bloqueadas") carregarBloqueadas();
+    if (view === "config") carregarConfig();
+    if (view === "dashboard") carregarDashboard();
+}
+
+document.querySelectorAll("[data-admin]").forEach(el => {
+    el.addEventListener("click", e => {
+        e.preventDefault();
+        goAdminView(el.dataset.admin);
+    });
+});
+
+async function carregarDashboard() {
+    try {
+        const res = await fetch("/api/dashboard");
+        const d = await res.json();
+        document.getElementById("dashboardHoje").textContent = d.hoje ?? 0;
+        document.getElementById("dashboardPendentes").textContent = d.pendentes ?? 0;
+        document.getElementById("dashboardConfirmados").textContent = d.confirmados ?? 0;
+        document.getElementById("dashboardCancelados").textContent = d.cancelados ?? 0;
+    } catch (e) { console.error(e); }
+}
+
+function hojeISO() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+
+function normalizeDateStr(value) {
+    if (!value) return "";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+    const m = String(value).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (m) return `${m[3]}-${m[2]}-${m[1]}`;
+    return value;
+}
+
+function agendamentoRow(a) {
+    const b = badgeMap[a.status] || ["", a.status];
+    return `
+        <tr>
+            <td>${escapeHtml(a.date)}</td>
+            <td>${escapeHtml(a.time)}</td>
+            <td>${escapeHtml(a.cliente)}</td>
+            <td>${escapeHtml(a.servico || "—")}</td>
+            <td><span class="badge ${b[0]}">${escapeHtml(b[1])}</span></td>
+            <td>
+                <div class="row-actions">
+                    ${a.status === "pending" ? `
+                        <button type="button" class="mini-btn" onclick="alterarStatus(${a.id},'confirmed')">Confirmar</button>
+                        <button type="button" class="mini-btn" onclick="alterarStatus(${a.id},'cancelled')">Cancelar</button>
+                    ` : ""}
+                    ${a.status === "confirmed" ? `
+                        <button type="button" class="mini-btn" onclick="alterarStatus(${a.id},'completed')">Concluir</button>
+                        <button type="button" class="mini-btn" onclick="alterarStatus(${a.id},'cancelled')">Cancelar</button>
+                    ` : ""}
+                    <button type="button" class="mini-btn" onclick="mostrarDetalhes(${a.id})">Detalhes</button>
+                    <button type="button" class="mini-btn" onclick="excluirAgendamento(${a.id})">Excluir</button>
+                </div>
+            </td>
+        </tr>`;
+}
+
+async function carregarAgendamentos() {
+    try {
+        const res = await fetch("/api/agendamentos");
+        const list = await res.json();
+        if (!Array.isArray(list)) return;
+
+        const header = `
+            <tr>
+                <th>Data</th><th>Horário</th><th>Cliente</th>
+                <th>Serviço</th><th>Status</th><th>Ações</th>
+            </tr>`;
+        const hoje = hojeISO();
+
+        const agenda = list.filter(a => {
+            const dt = normalizeDateStr(a.date);
+            return (a.status === "pending" || a.status === "confirmed") && dt >= hoje;
+        });
+
+        const agendaBody = agenda.length
+            ? agenda.map(agendamentoRow).join("")
+            : `<tr><td colspan="6" class="empty">Nada na agenda (pendentes/confirmados futuros).</td></tr>`;
+
+        const todosBody = list.length
+            ? list.map(agendamentoRow).join("")
+            : `<tr><td colspan="6" class="empty">Nenhum agendamento.</td></tr>`;
+
+        const agendaTable = document.getElementById("agendaTable");
+        const agendamentosTable = document.getElementById("agendamentosTable");
+        if (agendaTable) agendaTable.innerHTML = header + agendaBody;
+        if (agendamentosTable) agendamentosTable.innerHTML = header + todosBody;
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+async function alterarStatus(id, status) {
+    const msgs = {
+        confirmed: "Confirmar este agendamento?",
+        cancelled: "Cancelar este agendamento?\nO horário volta a ficar livre.",
+        completed: "Marcar como concluído (atendimento feito)?"
+    };
+    if (!confirm(msgs[status] || "Alterar status?")) return;
+
+    try {
+        const res = await fetch(`/api/agendamentos/${id}/status`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+            alert(data.error || "Erro ao alterar status.");
+            return;
+        }
+        carregarAgendamentos();
+        carregarDashboard();
+    } catch (e) {
+        console.error(e);
+        alert("Erro de conexão.");
+    }
+}
+
+async function excluirAgendamento(id) {
+    if (!confirm("Apagar este agendamento?\nO cadastro do cliente em Clientes permanece.")) return;
+    try {
+        const res = await fetch(`/api/agendamentos/${id}`, { method: "DELETE" });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+            alert(data.error || "Erro ao excluir.");
+            return;
+        }
+        carregarAgendamentos();
+        carregarDashboard();
+    } catch (e) {
+        alert("Erro de conexão.");
+    }
+}
+
+async function limparBanco() {
+    if (!confirm(
+        "Limpar agendamentos antigos?\n\n" +
+        "• Cancelados com mais de 30 dias\n" +
+        "• Concluídos com mais de 90 dias\n\n" +
+        "Clientes NÃO são apagados."
+    )) return;
+
+    try {
+        const res = await fetch("/api/limpeza", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                dias_cancelados: 30,
+                dias_concluidos: 90
+            })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+            alert(data.error || "Erro na limpeza. Confira a rota /api/limpeza no app.py.");
+            return;
+        }
+        alert(
+            `Limpeza ok ✅\n` +
+            `Cancelados: ${data.cancelados_removidos}\n` +
+            `Concluídos: ${data.concluidos_removidos}`
+        );
+        carregarAgendamentos();
+        carregarDashboard();
+    } catch (e) {
+        alert("Erro de conexão.");
+    }
+}
+
+async function mostrarDetalhes(id) {
+    try {
+        const res = await fetch(`/api/agendamentos/${id}`);
+        const d = await res.json();
+        if (!res.ok) { alert(d.error || "Erro"); return; }
+        alert(
+`AGENDAMENTO
+
+Cliente: ${d.name || "—"}
+WhatsApp: ${d.phone || "—"}
+E-mail: ${d.email || "—"}
+Serviço: ${d.service_name || "—"}
+Data: ${d.date || "—"}
+Horário: ${d.time || "—"}
+Local: ${d.local || "—"}
+Tamanho: ${d.size || "—"}
+Observação: ${d.note || "—"}
+Status: ${d.status || "—"}`
+        );
+    } catch (e) {
+        alert("Erro ao carregar.");
+    }
+}
+
+async function carregarClientes() {
+    try {
+        const res = await fetch("/api/clientes");
+        const list = await res.json();
+        const t = document.getElementById("clientesTable");
+        if (!t) return;
+        t.innerHTML = `
+            <tr><th>Nome</th><th>WhatsApp</th><th>E-mail</th><th>Agendamentos</th></tr>
+            ${list.length ? list.map(c => `
+                <tr>
+                    <td>${escapeHtml(c.nome)}</td>
+                    <td>${escapeHtml(c.whatsapp)}</td>
+                    <td>${escapeHtml(c.email || "—")}</td>
+                    <td>${c.agendamentos || 0}</td>
+                </tr>
+            `).join("") : `<tr><td colspan="4" class="empty">Nenhum cliente.</td></tr>`}
+        `;
+    } catch (e) { console.error(e); }
+}
+
+let servicesCache = [];
+
+async function carregarServicos() {
+    try {
+        const res = await fetch("/api/servicos");
+        servicesCache = await res.json();
+        const t = document.getElementById("servicosTable");
+        if (!t) return;
+        t.innerHTML = `
+            <tr>
+                <th>Serviço</th><th>Categoria</th><th>Preço</th>
+                <th>Duração</th><th>Status</th><th>Ações</th>
+            </tr>
+            ${servicesCache.length ? servicesCache.map(s => `
+                <tr>
+                    <td>${escapeHtml(s.name)}</td>
+                    <td>${escapeHtml(s.category)}</td>
+                    <td>${escapeHtml(s.price || "—")}</td>
+                    <td>${escapeHtml(s.duration || "—")} min</td>
+                    <td>
+                        <span class="badge ${s.active ? "confirmed" : "cancelled"}">
+                            ${s.active ? "Ativo" : "Inativo"}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="row-actions">
+                            <button type="button" class="mini-btn" onclick="editarServico(${s.id})">Editar</button>
+                            <button type="button" class="mini-btn" onclick="toggleServico(${s.id})">
+                                ${s.active ? "Desativar" : "Ativar"}
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join("") : `<tr><td colspan="6" class="empty">Nenhum serviço.</td></tr>`}
+        `;
+    } catch (e) { console.error(e); }
+}
+
+async function criarServico() {
+    const name = prompt("Nome do serviço:");
+    if (!name) return;
+    const category = prompt("Categoria:");
+    if (!category) return;
+    const description = prompt("Descrição:") || "";
+    const price = prompt("Preço:") || "";
+    const duration = prompt("Duração em minutos:", "60") || "60";
+    try {
+        const res = await fetch("/api/servicos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, category, description, price, duration })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) { alert(data.error || "Erro"); return; }
+        carregarServicos();
+    } catch (e) { alert("Erro de conexão."); }
+}
+
+async function editarServico(id) {
+    const s = servicesCache.find(x => String(x.id) === String(id));
+    if (!s) return;
+    const name = prompt("Nome:", s.name); if (name === null) return;
+    const category = prompt("Categoria:", s.category); if (category === null) return;
+    const description = prompt("Descrição:", s.description || ""); if (description === null) return;
+    const price = prompt("Preço:", s.price || ""); if (price === null) return;
+    const duration = prompt("Duração (min):", s.duration || 60); if (duration === null) return;
+    try {
+        const res = await fetch(`/api/servicos/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, category, description, price, duration })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) { alert(data.error || "Erro"); return; }
+        carregarServicos();
+    } catch (e) { alert("Erro de conexão."); }
+}
+
+async function toggleServico(id) {
+    try {
+        const res = await fetch(`/api/servicos/${id}/toggle`, { method: "PUT" });
+        const data = await res.json();
+        if (!res.ok || !data.success) { alert(data.error || "Erro"); return; }
+        carregarServicos();
+    } catch (e) { alert("Erro de conexão."); }
+}
+
+let worksCache = [];
+
+async function carregarPortfolio() {
+    try {
+        const res = await fetch("/api/portfolio");
+        worksCache = await res.json();
+        const grid = document.getElementById("adminPortfolioGrid");
+        if (!grid) return;
+        grid.innerHTML = worksCache.length
+            ? worksCache.map(w => `
+                <div class="work-card">
+                    <img src="${escapeHtml(w.image)}" alt="${escapeHtml(w.category)}" loading="lazy"
+                         onerror="this.style.opacity='0.3'">
+                    <div class="cap">
+                        <span>${escapeHtml(w.category)}</span>
+                        <div class="row-actions">
+                            <button type="button" class="mini-btn" onclick="editarPortfolio(${w.id})">Editar</button>
+                            <button type="button" class="mini-btn" onclick="excluirPortfolio(${w.id})">Excluir</button>
+                        </div>
+                    </div>
+                </div>
+            `).join("")
+            : `<p class="empty">Nenhuma imagem cadastrada.</p>`;
+    } catch (e) { console.error(e); }
+}
+
+async function criarPortfolio() {
+    const category = prompt("Categoria da imagem:");
+    if (!category) return;
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/png,image/jpeg,image/webp,image/gif";
+    input.onchange = async function () {
+        const file = input.files[0];
+        if (!file) return;
+        const formData = new FormData();
+        formData.append("file", file);
+        try {
+            const up = await fetch("/api/upload", { method: "POST", body: formData });
+            const upData = await up.json();
+            if (!up.ok || !upData.success) {
+                alert(upData.error || "Erro no upload.");
+                return;
+            }
+            const res = await fetch("/api/portfolio", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ category, image: upData.url })
+            });
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                alert(data.error || "Erro ao salvar.");
+                return;
+            }
+            carregarPortfolio();
+            alert("Imagem adicionada ✅");
+        } catch (e) {
+            alert("Erro de conexão no upload.");
+        }
+    };
+    input.click();
+}
+
+async function editarPortfolio(id) {
+    const w = worksCache.find(x => String(x.id) === String(id));
+    if (!w) return;
+    const category = prompt("Categoria:", w.category);
+    if (category === null) return;
+    const trocar = confirm("Trocar a imagem?\nOK = nova foto\nCancelar = manter");
+    if (trocar) {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/png,image/jpeg,image/webp,image/gif";
+        input.onchange = async function () {
+            const file = input.files[0];
+            if (!file) return;
+            const formData = new FormData();
+            formData.append("file", file);
+            try {
+                const up = await fetch("/api/upload", { method: "POST", body: formData });
+                const upData = await up.json();
+                if (!up.ok || !upData.success) {
+                    alert(upData.error || "Erro no upload.");
+                    return;
+                }
+                await salvarPortfolio(id, category, upData.url);
+            } catch (e) {
+                alert("Erro de conexão.");
+            }
+        };
+        input.click();
+    } else {
+        await salvarPortfolio(id, category, w.image);
+    }
+}
+
+async function salvarPortfolio(id, category, image) {
+    try {
+        const res = await fetch(`/api/portfolio/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ category, image })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) { alert(data.error || "Erro"); return; }
+        carregarPortfolio();
+    } catch (e) { alert("Erro de conexão."); }
+}
+
+async function excluirPortfolio(id) {
+    if (!confirm("Excluir esta imagem?")) return;
+    try {
+        const res = await fetch(`/api/portfolio/${id}`, { method: "DELETE" });
+        const data = await res.json();
+        if (!res.ok || !data.success) { alert(data.error || "Erro"); return; }
+        carregarPortfolio();
+    } catch (e) { alert("Erro de conexão."); }
+}
+
+async function carregarDisponibilidade() {
+    try {
+        const res = await fetch("/api/disponibilidade");
+        const rows = await res.json();
+        const t = document.getElementById("dispoTable");
+        if (!t) return;
+        t.innerHTML = `
+            <tr><th>Dia</th><th>Horário</th><th>Status</th><th>Ação</th></tr>
+            ${rows.map(r => `
+                <tr>
+                    <td>${diasNome[r.day_of_week]}</td>
+                    <td>${r.enabled ? `${r.start_time} – ${r.end_time}` : "Fechado"}</td>
+                    <td>${r.enabled ? "Aberto" : "Fechado"}</td>
+                    <td>
+                        <button type="button" class="mini-btn"
+                            onclick="editarDisponibilidade(${r.id}, ${r.enabled}, '${r.start_time || ""}', '${r.end_time || ""}')">
+                            Editar
+                        </button>
+                    </td>
+                </tr>
+            `).join("")}
+        `;
+    } catch (e) { console.error(e); }
+}
+
+async function editarDisponibilidade(id, enabled, start, end) {
+    const aberto = confirm("OK = dia ABERTO\nCancelar = dia FECHADO");
+    let startTime = start || "09:00";
+    let endTime = end || "18:00";
+    if (aberto) {
+        startTime = prompt("Início (HH:MM):", start || "09:00");
+        if (startTime === null) return;
+        endTime = prompt("Fim (HH:MM):", end || "18:00");
+        if (endTime === null) return;
+    }
+    try {
+        const res = await fetch(`/api/disponibilidade/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                enabled: aberto,
+                start_time: startTime,
+                end_time: endTime
+            })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+            alert(data.error || "Erro ao salvar.");
+            return;
+        }
+        carregarDisponibilidade();
+        alert(aberto ? `Aberto: ${data.start_time} – ${data.end_time}` : "Dia fechado.");
+    } catch (e) {
+        alert("Erro de conexão.");
+    }
+}
+
+async function carregarBloqueadas() {
+    const box = document.getElementById("bloqueadasList");
+    try {
+        const res = await fetch("/api/datas-bloqueadas");
+        const list = await res.json();
+        if (!list.length) {
+            box.innerHTML = `<p class="empty">Nenhuma data bloqueada.</p>`;
+            return;
+        }
+        box.innerHTML = `
+            <table class="admin-table">
+                <tr><th>Data</th><th>Motivo</th><th>Ação</th></tr>
+                ${list.map(d => `
+                    <tr>
+                        <td>${escapeHtml(d.date)}</td>
+                        <td>${escapeHtml(d.reason || "—")}</td>
+                        <td><button type="button" class="mini-btn" onclick="desbloquear(${d.id})">Desbloquear</button></td>
+                    </tr>
+                `).join("")}
+            </table>
+        `;
+    } catch (e) {
+        box.innerHTML = `<p class="empty">Erro ao carregar.</p>`;
+    }
+}
+
+async function bloquearData() {
+    const date = prompt("Data (DD/MM/AAAA ou AAAA-MM-DD):");
+    if (!date) return;
+    const reason = prompt("Motivo (opcional):") || "";
+    try {
+        const res = await fetch("/api/datas-bloqueadas", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ date, reason })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) { alert(data.error || "Erro"); return; }
+        carregarBloqueadas();
+    } catch (e) { alert("Erro de conexão."); }
+}
+
+async function desbloquear(id) {
+    if (!confirm("Desbloquear esta data?")) return;
+    try {
+        const res = await fetch(`/api/datas-bloqueadas/${id}`, { method: "DELETE" });
+        const data = await res.json();
+        if (!res.ok || !data.success) { alert(data.error || "Erro"); return; }
+        carregarBloqueadas();
+    } catch (e) { alert("Erro de conexão."); }
+}
+
+async function carregarConfig() {
+    try {
+        const res = await fetch("/api/config");
+        const c = await res.json();
+        document.getElementById("configArtist").value = c.artist_name || c.name || "";
+        document.getElementById("configWhatsapp").value = c.whatsapp || "";
+        document.getElementById("configInstagram").value = c.instagram || "";
+        document.getElementById("configDuration").value = c.default_duration || "";
+        document.getElementById("configDescription").value = c.description || "";
+    } catch (e) { console.error(e); }
+}
+
+async function salvarConfig() {
+    const data = {
+        artist_name: document.getElementById("configArtist").value,
+        whatsapp: document.getElementById("configWhatsapp").value,
+        instagram: document.getElementById("configInstagram").value,
+        default_duration: document.getElementById("configDuration").value,
+        description: document.getElementById("configDescription").value
+    };
+    try {
+        const res = await fetch("/api/config", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        if (!res.ok || !result.success) { alert(result.error || "Erro"); return; }
+        alert("Configurações salvas ✅");
+    } catch (e) { alert("Erro de conexão."); }
+}
+
+carregarDashboard();
+carregarAgendamentos();
+</script>
+</body>
+</html>

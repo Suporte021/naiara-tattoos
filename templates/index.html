@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naiara Tattoo — Fine Line</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<!-- NAV -->
+<header class="top">
+    <div class="wrap">
+        <a href="#" class="brand" data-nav="home">
+            <svg class="leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                <path d="M4 20C4 10 10 4 20 4C20 14 14 20 4 20Z"/>
+                <path d="M4 20C8 16 12 12 20 4"/>
+            </svg>
+            Naiara <em>Tattoo</em>
+        </a>
+        <nav class="desktop-nav" id="desktopNav">
+            <a data-nav="home">Início</a>
+            <a data-nav="portfolio">Portfólio</a>
+            <a data-nav="servicos">Serviços</a>
+            <a data-nav="precos">Preços</a>
+            <a data-nav="como-funciona">Como funciona</a>
+            <a data-nav="contato">Contato</a>
+        </nav>
+        <div style="display:flex;align-items:center;gap:1rem;">
+            <a class="btn btn-solid nav-cta" data-nav="agendamento">Agendar horário</a>
+            <button class="burger" id="burgerBtn" aria-label="Abrir menu">☰</button>
+        </div>
+    </div>
+</header>
+
+<!-- MENU MOBILE -->
+<div class="mobile-menu" id="mobileMenu">
+    <a data-nav="home">Início</a>
+    <a data-nav="portfolio">Portfólio</a>
+    <a data-nav="servicos">Serviços</a>
+    <a data-nav="precos">Preços</a>
+    <a data-nav="como-funciona">Como funciona</a>
+    <a data-nav="agendamento">Agendar horário</a>
+    <a data-nav="contato">Contato</a>
+</div>
+
+<!-- HOME -->
+<main id="page-home" class="page active">
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <svg class="hero-fineline" viewBox="0 0 100 160" fill="none">
+            <path class="draw-path" d="M50 5 C 30 30, 70 45, 50 70 C 30 95, 70 110, 50 155"/>
+            <path class="draw-path" style="animation-delay:.6s" d="M50 30 C 60 28, 68 20, 66 10"/>
+            <path class="draw-path" style="animation-delay:.9s" d="M50 60 C 38 58, 30 50, 32 40"/>
+            <path class="draw-path" style="animation-delay:1.2s" d="M50 100 C 62 98, 70 90, 68 80"/>
+        </svg>
+        <div class="wrap">
+            <span class="eyebrow">Fine Line Tattoo · Morro do Chapéu &amp; Camaçari — BA</span>
+            <h1>Traços delicados<br>para transformar<br><em>ideias em arte.</em></h1>
+            <p class="lede">
+                Tatuagens autorais em fine line: minimalistas, florais e de escrita.
+                Atendimento individual, com hora marcada.
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-solid" data-nav="agendamento">Agendar tatuagem</a>
+                <a class="btn" data-nav="portfolio">Ver trabalhos</a>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="wrap">
+            <div class="section-head">
+                <span class="eyebrow">Trabalhos recentes</span>
+                <h2>Um pouco do que já saiu do papel para a pele.</h2>
+            </div>
+            <div class="grid-3" id="homeWorks"></div>
+            <div style="text-align:center;margin-top:2.6rem;">
+                <a class="btn" data-nav="portfolio">Ver portfólio completo</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="alt">
+        <div class="wrap">
+            <div class="section-head">
+                <span class="eyebrow">Diferenciais</span>
+                <h2>Por que escolher um atendimento individual.</h2>
+            </div>
+            <div class="grid-3">
+                <div class="diff-item">
+                    <span class="num">I</span>
+                    <div>
+                        <h4>Atendimento exclusivo</h4>
+                        <p>Um cliente por horário, sem pressa e sem fila.</p>
+                    </div>
+                </div>
+                <div class="diff-item">
+                    <span class="num">II</span>
+                    <div>
+                        <h4>Traço autoral</h4>
+                        <p>Cada desenho é adaptado ao corpo e à ideia.</p>
+                    </div>
+                </div>
+                <div class="diff-item">
+                    <span class="num">III</span>
+                    <div>
+                        <h4>Ambiente cuidado</h4>
+                        <p>Materiais descartáveis, biossegurança e conforto.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="wrap">
+            <div class="section-head">
+                <span class="eyebrow">Como funciona</span>
+                <h2>Do agendamento à tatuagem pronta.</h2>
+            </div>
+            <div class="step-row">
+                <div class="step">
+                    <span class="idx">01</span>
+                    <div>
+                        <h4>Você escolhe o serviço e o horário</h4>
+                        <p>Direto pelo site, em poucos passos.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="idx">02</span>
+                    <div>
+                        <h4>Confirmação pelo WhatsApp</h4>
+                        <p>Naiara confirma os detalhes.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="idx">03</span>
+                    <div>
+                        <h4>Dia da tatuagem</h4>
+                        <p>Você chega, revisa o desenho e o traço ganha vida.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="alt">
+        <div class="wrap">
+            <div class="section-head">
+                <span class="eyebrow">Depoimentos</span>
+                <h2>O que dizem depois de tatuar.</h2>
+            </div>
+            <div class="grid-2">
+                <blockquote class="testi">
+                    "Delicada do jeitinho que eu queria. Cuidado com cada detalhe."
+                    <footer>— Camila R.</footer>
+                </blockquote>
+                <blockquote class="testi">
+                    "Ambiente tranquilo e a Naiara super atenciosa."
+                    <footer>— Yara M.</footer>
+                </blockquote>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-band" style="border-bottom:none;">
+        <div class="wrap">
+            <span class="eyebrow">Pronta para o próximo traço?</span>
+            <h2>Vamos transformar sua ideia em uma fine line.</h2>
+            <a class="btn btn-solid" data-nav="agendamento">Agendar horário</a>
+        </div>
+    </section>
+</main>
+
+<!-- PORTFÓLIO -->
+<main id="page-portfolio" class="page">
+    <section style="padding-top:8.5rem;">
+        <div class="wrap">
+            <div class="section-head">
+                <span class="eyebrow">Portfólio</span>
+                <h2>Trabalhos por categoria.</h2>
+            </div>
+            <div class="filters" id="filters"></div>
+            <div class="grid-3" id="portfolioGrid"></div>
+        </div>
+    </section>
+</main>
+
+<!-- SERVIÇOS -->
+<main id="page-servicos" class="page">
+    <section style="padding-top:8.5rem;">
+        <div class="wrap">
+            <div class="section-head">
+                <span class="eyebrow">Serviços</span>
+                <h2>O que a Naiara tatua.</h2>
+            </div>
+            <div class="grid-3" id="servicesGrid"></div>
+        </div>
+    </section>
+</main>
+
+<!-- PREÇOS -->
+<main id="page-precos" class="page">
+    <section style="padding-top:8.5rem;">
+        <div class="wrap">
+            <div class="section-head">
+                <span class="eyebrow">Preços</span>
+                <h2>Valores de referência.</h2>
+                <p>
+                    Cada tatuagem é única. O valor final é confirmado
+                    após avaliar tamanho, local e complexidade.
+                </p>
+            </div>
+            <div class="grid-3" id="pricesGrid"></div>
+        </div>
+    </section>
+</main>
+
+<!-- COMO FUNCIONA -->
+<main id="page-como-funciona" class="page">
+    <section style="padding-top:8.5rem;">
+        <div class="wrap">
+            <div class="section-head">
+                <span class="eyebrow">Como funciona</span>
+                <h2>Do primeiro contato à tatuagem pronta.</h2>
+            </div>
+            <div class="step-row">
+                <div class="step">
+                    <span class="idx">01</span>
+                    <div>
+                        <h4>Escolha o serviço</h4>
+                        <p>Fine line, floral, escrita ou personalizada.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="idx">02</span>
+                    <div>
+                        <h4>Escolha data e horário</h4>
+                        <p>Veja os horários realmente disponíveis.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="idx">03</span>
+                    <div>
+                        <h4>Conte sobre sua ideia</h4>
+                        <p>Local, tamanho e referência.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="idx">04</span>
+                    <div>
+                        <h4>Confirmação pelo WhatsApp</h4>
+                        <p>O pedido fica pendente até ser confirmado.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="idx">05</span>
+                    <div>
+                        <h4>Dia da sessão</h4>
+                        <p>Revisão do desenho e realização da tatuagem.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- AGENDAMENTO -->
+<main id="page-agendamento" class="page">
+    <section style="padding-top:8.5rem;border-bottom:none;">
+        <div class="wrap wizard">
+            <div class="section-head" style="margin-bottom:2rem;">
+                <span class="eyebrow">Agendamento</span>
+                <h2>Vamos marcar sua tatuagem.</h2>
+            </div>
+            <div class="wizard-progress" id="wizProgress"></div>
+            <div class="wizard-labels" id="wizLabels"></div>
+
+            <!-- STEP 1 -->
+            <div class="wstep active" data-step="1">
+                <h3>1. Escolha o serviço</h3>
+                <div class="choice-list" id="wizServices"></div>
+                <div class="wizard-nav">
+                    <span></span>
+                    <button class="btn btn-solid" onclick="wizNext(1)">Continuar</button>
+                </div>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="wstep" data-step="2">
+                <h3>2. Escolha a data</h3>
+                <p id="calendarSubtitle" style="color:var(--text-muted);font-size:.85rem;margin-bottom:1.4rem;">
+                    Carregando calendário...
+                </p>
+                <div class="day-grid" id="wizDays"></div>
+                <div class="wizard-nav">
+                    <button class="btn" onclick="wizBack(2)">Voltar</button>
+                    <button class="btn btn-solid" onclick="wizNext(2)">Continuar</button>
+                </div>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="wstep" data-step="3">
+                <h3>3. Escolha o horário</h3>
+                <div class="time-grid" id="wizTimes">
+                    <p>Escolha uma data primeiro.</p>
+                </div>
+                <div class="wizard-nav">
+                    <button class="btn" onclick="wizBack(3)">Voltar</button>
+                    <button class="btn btn-solid" onclick="wizNext(3)">Continuar</button>
+                </div>
+            </div>
+
+            <!-- STEP 4 -->
+            <div class="wstep" data-step="4">
+                <h3>4. Seus dados</h3>
+                <div class="field-row">
+                    <div class="field">
+                        <label>Nome</label>
+                        <input id="fName" type="text" placeholder="Seu nome">
+                    </div>
+                    <div class="field">
+                        <label>WhatsApp</label>
+                        <input id="fPhone" type="tel" placeholder="(71) 9XXXX-XXXX">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>E-mail (opcional)</label>
+                    <input id="fEmail" type="email" placeholder="seu@email.com">
+                </div>
+                <div class="field-row">
+                    <div class="field">
+                        <label>Local do corpo</label>
+                        <input id="fLocal" type="text" placeholder="Ex.: antebraço">
+                    </div>
+                    <div class="field">
+                        <label>Tamanho aproximado</label>
+                        <input id="fSize" type="text" placeholder="Ex.: 6 cm">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Ideia da tatuagem / observação</label>
+                    <textarea id="fNote" rows="3" placeholder="Conte um pouco sobre a ideia..."></textarea>
+                </div>
+                <div class="wizard-nav">
+                    <button class="btn" onclick="wizBack(4)">Voltar</button>
+                    <button class="btn btn-solid" onclick="wizNext(4)">Revisar pedido</button>
+                </div>
+            </div>
+
+            <!-- STEP 5 -->
+            <div class="wstep" data-step="5">
+                <h3>5. Confirme seu agendamento</h3>
+                <div class="summary-card" id="wizSummary"></div>
+                <p style="font-size:.75rem;color:var(--text-faint);margin-top:1rem;">
+                    Ao confirmar, seu pedido será enviado como pendente.
+                </p>
+                <div class="wizard-nav">
+                    <button class="btn" onclick="wizBack(5)">Voltar</button>
+                    <button class="btn btn-solid" onclick="wizConfirm()">Confirmar e abrir WhatsApp</button>
+                </div>
+            </div>
+
+            <!-- STEP 6 -->
+            <div class="wstep" data-step="6">
+                <div class="confirm-box">
+                    <svg class="check" viewBox="0 0 52 52" fill="none" stroke="var(--sage)" stroke-width="1.4">
+                        <circle cx="26" cy="26" r="24"/>
+                        <path d="M15 27l7 7 15-15"/>
+                    </svg>
+                    <h3>Pedido enviado!</h3>
+                    <p style="color:var(--text-muted);font-size:.9rem;max-width:34ch;margin:.6rem auto 1.8rem;">
+                        Seu agendamento está pendente. A Naiara vai confirmar pelo WhatsApp.
+                    </p>
+                    <button class="btn" onclick="wizReset()">Fazer novo agendamento</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- CONTATO -->
+<main id="page-contato" class="page">
+    <section style="padding-top:8.5rem;border-bottom:none;">
+        <div class="wrap">
+            <div class="section-head">
+                <span class="eyebrow">Contato</span>
+                <h2>Fale com a Naiara.</h2>
+            </div>
+            <div class="contact-grid">
+                <div>
+                    <div class="contact-item">
+                        <div>
+                            <h4>WhatsApp</h4>
+                            <p>Entre em contato pelo WhatsApp.</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div>
+                            <h4>Instagram</h4>
+                            <p>@araiantattoo</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div>
+                            <h4>Localização</h4>
+                            <p>Morro do Chapéu — BA / Camaçari — BA</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div>
+                            <h4>Atendimento</h4>
+                            <p>Conforme disponibilidade cadastrada.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="map-fake"></div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="site" id="siteFooter">
+    <div class="wrap">
+        <div style="border-top:1px solid var(--line);"></div>
+        <div class="rows">
+            <span>© 2026 Naiara Tattoo — Fine Line</span>
+            <div style="display:flex;gap:1.2rem;">
+                <a class="social" href="https://www.instagram.com/araiantattoo?igsi=MXRpMGRtN20waHpwbw%3D%3D" target="_blank">Instagram</a>
+                <a class="social" href="https://wa.me/5571999999999" target="_blank">WhatsApp</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script id="app-data" type="application/json">
+{
+    "services": {{ services | tojson }},
+    "portfolio": {{ portfolio | tojson }},
+    "config": {{ config | tojson }}
+}
+</script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
