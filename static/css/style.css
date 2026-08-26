@@ -975,12 +975,18 @@ footer.site a.social:hover {
 }
 
 .map-fake {
-    background: var(--bg-card); 
+    background-image: url("../img/icone.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
     border: 1px solid var(--line);
-    aspect-ratio: 4/3;
+    aspect-ratio: 4 / 3;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     color: var(--text-faint);
     font-size: .78rem;
     letter-spacing: .05em;
