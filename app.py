@@ -632,6 +632,37 @@ def api_clientes():
         db.close()
 
 
+@app.route("/api/clientes/<int:client_id>", methods=["DELETE"])
+@login_required
+def excluir_cliente(client_id):
+    db = get_db()
+    try:
+        exists = db.execute(
+            "SELECT id FROM clients WHERE id = ?",
+            (client_id,)
+        ).fetchone()
+        if not exists:
+            return json_error("Cliente não encontrado.", 404)
+
+        # Remove a referência do cliente nos agendamentos (mantém o histórico)
+        db.execute(
+            "UPDATE appointments SET client_id = NULL WHERE client_id = ?",
+            (client_id,)
+        )
+        db.execute(
+            "DELETE FROM clients WHERE id = ?",
+            (client_id,)
+        )
+        db.commit()
+        return json_success(message="Cliente excluído.")
+    except Exception as e:
+        db.rollback()
+        print("ERRO AO EXCLUIR CLIENTE:", e)
+        return json_error(f"Erro ao excluir cliente: {e}", 500)
+    finally:
+        db.close()
+
+
 # =========================================================
 # SERVIÇOS
 # =========================================================
@@ -1036,6 +1067,7 @@ def dashboard():
     finally:
         db.close()
 
+
 # =========================================================
 # LIMPEZA / EXCLUSÃO
 # =========================================================
@@ -1100,8 +1132,7 @@ def limpeza_banco():
         """, (limite_done,))
         n_done = cur2.rowcount
 
-        db.commit()
-
+        # Remove clientes órfãos (sem nenhum agendamento)
         cur3 = db.execute("""
             DELETE FROM clients
             WHERE id NOT IN (
@@ -1118,18 +1149,13 @@ def limpeza_banco():
             concluidos_removidos=n_done,
             clientes_removidos=n_clientes
         )
-
-        return json_success(
-            message="Limpeza concluída.",
-            cancelados_removidos=n_cancel,
-            concluidos_removidos=n_done
-        )
     except Exception as e:
         db.rollback()
         print("ERRO LIMPEZA:", e)
         return json_error("Erro na limpeza.", 500)
     finally:
         db.close()
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="127.0.0.1", port=5000)

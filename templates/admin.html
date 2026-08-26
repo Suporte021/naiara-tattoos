@@ -673,40 +673,61 @@ async function carregarClientes() {
 
 let servicesCache = [];
 
-async function carregarServicos() {
+
+async function carregarClientes() {
     try {
-        const res = await fetch("/api/servicos");
-        servicesCache = await res.json();
-        const t = document.getElementById("servicosTable");
+        const res = await fetch("/api/clientes");
+        const list = await res.json();
+        const t = document.getElementById("clientesTable");
         if (!t) return;
         t.innerHTML = `
             <tr>
-                <th>Serviço</th><th>Categoria</th><th>Preço</th>
-                <th>Duração</th><th>Status</th><th>Ações</th>
+                <th>Nome</th>
+                <th>WhatsApp</th>
+                <th>E-mail</th>
+                <th>Agendamentos</th>
+                <th>Ações</th>
             </tr>
-            ${servicesCache.length ? servicesCache.map(s => `
+            ${list.length ? list.map(c => `
                 <tr>
-                    <td>${escapeHtml(s.name)}</td>
-                    <td>${escapeHtml(s.category)}</td>
-                    <td>${escapeHtml(s.price || "—")}</td>
-                    <td>${escapeHtml(s.duration || "—")} min</td>
-                    <td>
-                        <span class="badge ${s.active ? "confirmed" : "cancelled"}">
-                            ${s.active ? "Ativo" : "Inativo"}
-                        </span>
-                    </td>
+                    <td>${escapeHtml(c.nome)}</td>
+                    <td>${escapeHtml(c.whatsapp)}</td>
+                    <td>${escapeHtml(c.email || "—")}</td>
+                    <td>${c.agendamentos || 0}</td>
                     <td>
                         <div class="row-actions">
-                            <button type="button" class="mini-btn" onclick="editarServico(${s.id})">Editar</button>
-                            <button type="button" class="mini-btn" onclick="toggleServico(${s.id})">
-                                ${s.active ? "Desativar" : "Ativar"}
+                            <button type="button" class="mini-btn" onclick="excluirCliente(${c.id})">
+                                Apagar
                             </button>
                         </div>
                     </td>
                 </tr>
-            `).join("") : `<tr><td colspan="6" class="empty">Nenhum serviço.</td></tr>`}
+            `).join("") : `<tr><td colspan="5" class="empty">Nenhum cliente.</td></tr>`}
         `;
     } catch (e) { console.error(e); }
+}
+
+async function excluirCliente(id) {
+    if (!confirm(
+        "Apagar este cliente?\n\n" +
+        "Os agendamentos dele continuam no histórico,\n" +
+        "só o cadastro de contato é removido."
+    )) return;
+
+    try {
+        const res = await fetch(`/api/clientes/${id}`, {
+            method: "DELETE"
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+            alert(data.error || "Erro ao apagar cliente.");
+            return;
+        }
+        carregarClientes();
+        carregarDashboard();
+    } catch (e) {
+        alert("Erro de conexão.");
+    }
 }
 
 async function criarServico() {

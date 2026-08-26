@@ -625,122 +625,161 @@ async function carregarDatasBloqueadas() {
 
 
 /* =========================================================
-   CALENDÁRIO REAL
+   CALENDÁRIO REAL (com navegação de meses)
    ========================================================= */
 
-const wizDays =
-    document.getElementById("wizDays");
+const wizDays = document.getElementById("wizDays");
 
+// Estado do mês que está sendo exibido
+let calendarState = {
+    year: new Date().getFullYear(),
+    month: new Date().getMonth() // 0-11
+};
+
+// Quantos meses à frente o usuário pode ir
+const MAX_MONTHS_AHEAD = 4;
 
 function formatDate(date) {
-
-    const day =
-        String(date.getDate()).padStart(2, "0");
-
-    const month =
-        String(date.getMonth() + 1).padStart(2, "0");
-
-    const year =
-        date.getFullYear();
-
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
     return `${day}/${month}/${year}`;
 }
 
-
 function isBlocked(dateString) {
-
     return blockedDates.some(function (item) {
         return item.date === dateString;
     });
 }
 
-
 function getAvailabilityForDate(date) {
-
-    const dayOfWeek =
-        date.getDay();
-
+    const dayOfWeek = date.getDay();
     return availability.find(function (item) {
-
         return Number(item.day_of_week) === dayOfWeek;
-
     });
 }
 
+function isMinMonth() {
+    const now = new Date();
+    return (
+        calendarState.year === now.getFullYear() &&
+        calendarState.month === now.getMonth()
+    );
+}
+
+function isMaxMonth() {
+    const now = new Date();
+    const max = new Date(now.getFullYear(), now.getMonth() + MAX_MONTHS_AHEAD, 1);
+    return (
+        calendarState.year === max.getFullYear() &&
+        calendarState.month === max.getMonth()
+    );
+}
+
+function changeMonth(delta) {
+    if (delta < 0 && isMinMonth()) return;
+    if (delta > 0 && isMaxMonth()) return;
+
+    calendarState.month += delta;
+
+    if (calendarState.month > 11) {
+        calendarState.month = 0;
+        calendarState.year += 1;
+    } else if (calendarState.month < 0) {
+        calendarState.month = 11;
+        calendarState.year -= 1;
+    }
+
+    // Limpa seleção de data/horário ao mudar de mês
+    wizState.day = null;
+    wizState.time = null;
+
+    if (wizTimes) {
+        wizTimes.innerHTML = `<p style="color:var(--text-muted);font-size:.85rem;">Escolha uma data primeiro.</p>`;
+    }
+
+    renderCalendar();
+}
 
 function renderCalendar() {
-
     if (!wizDays) return;
 
+    const year = calendarState.year;
+    const month = calendarState.month;
+
     const now = new Date();
+    const firstDay = new Date(year, month, 1);
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    const year =
-        now.getFullYear();
+    const monthName = new Intl.DateTimeFormat("pt-BR", {
+        month: "long"
+    }).format(firstDay);
 
-    const month =
-        now.getMonth();
-
-    const firstDay =
-        new Date(year, month, 1);
-
-    const daysInMonth =
-        new Date(year, month + 1, 0).getDate();
-
-    const monthName =
-        new Intl.DateTimeFormat(
-            "pt-BR",
-            { month: "long" }
-        ).format(firstDay);
-
-    const subtitle =
-        document.getElementById("calendarSubtitle");
-
+    // Atualiza o subtítulo + botões de navegação
+    const subtitle = document.getElementById("calendarSubtitle");
     if (subtitle) {
+        subtitle.innerHTML = `
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+                <button type="button" class="btn" id="calPrevBtn"
+                    style="padding:.4rem .9rem;font-size:.8rem;"
+                    ${isMinMonth() ? "disabled" : ""}>
+                    ← Mês anterior
+                </button>
+                <span style="font-size:.9rem;text-transform:capitalize;">
+                    ${monthName} ${year}
+                </span>
+                <button type="button" class="btn" id="calNextBtn"
+                    style="padding:.4rem .9rem;font-size:.8rem;"
+                    ${isMaxMonth() ? "disabled" : ""}>
+                    Próximo mês →
+                </button>
+            </div>
+            <p style="margin-top:.6rem;color:var(--text-muted);font-size:.8rem;">
+                Dias indisponíveis aparecem apagados
+            </p>
+        `;
 
-        subtitle.textContent =
-            `${monthName} ${year} · dias indisponíveis aparecem apagados`;
-
+        // Listeners dos botões (sempre recriados)
+        const prevBtn = document.getElementById("calPrevBtn");
+        const nextBtn = document.getElementById("calNextBtn");
+        if (prevBtn) {
+            prevBtn.onclick = function () { changeMonth(-1); };
+        }
+        if (nextBtn) {
+            nextBtn.onclick = function () { changeMonth(1); };
+        }
     }
 
-    const dows = [
-        "D", "S", "T", "Q", "Q", "S", "S"
-    ];
+    const dows = ["D", "S", "T", "Q", "Q", "S", "S"];
 
-    let html =
-        dows
-            .map(function (day) {
-                return `<div class="dow">${day}</div>`;
-            })
-            .join("");
+    let html = dows
+        .map(function (day) {
+            return `<div class="dow">${day}</div>`;
+        })
+        .join("");
 
-
+    // Espaços vazios antes do dia 1
     for (let i = 0; i < firstDay.getDay(); i++) {
-
         html += `<div></div>`;
-
     }
 
+    const today = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
+    );
 
     for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(year, month, day);
+        const dateString = formatDate(date);
 
-        const date =
-            new Date(year, month, day);
-
-        const dateString =
-            formatDate(date);
-
-        const config =
-            getAvailabilityForDate(date);
+        const config = getAvailabilityForDate(date);
 
         const closed =
             !config ||
             !config.enabled ||
             isBlocked(dateString) ||
-            date < new Date(
-                now.getFullYear(),
-                now.getMonth(),
-                now.getDate()
-            );
+            date < today;
 
         html += `
             <button
@@ -756,15 +795,11 @@ function renderCalendar() {
     wizDays.innerHTML = html;
 }
 
-
 if (wizDays) {
-
     wizDays.addEventListener(
         "click",
         async function (event) {
-
-            const button =
-                event.target.closest("button");
+            const button = event.target.closest("button");
 
             if (!button || button.disabled) {
                 return;
@@ -778,17 +813,13 @@ if (wizDays) {
 
             button.classList.add("selected");
 
-            wizState.day =
-                button.dataset.date;
-
+            wizState.day = button.dataset.date;
             wizState.time = null;
 
             await carregarHorarios(wizState.day);
         }
     );
 }
-
-
 /* =========================================================
    HORÁRIOS REAIS
    ========================================================= */
