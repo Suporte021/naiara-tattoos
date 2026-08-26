@@ -690,11 +690,13 @@ def criar_servico():
     data = request.get_json(silent=True) or {}
     name = str(data.get("name", "")).strip()
     category = str(data.get("category", "")).strip()
+
     if not name or not category:
         return json_error("Nome e categoria são obrigatórios.")
 
     db = get_db()
     try:
+        duration = parse_duration(data.get("duration"), 60)
         cursor = db.execute("""
             INSERT INTO services
                 (name, category, description, price, duration, active)
@@ -702,12 +704,17 @@ def criar_servico():
         """, (
             name,
             category,
-            data.get("description"),
-            data.get("price"),
-            parse_duration(data.get("duration"), 60)
+            data.get("description") or None,
+            data.get("price") or None,
+            duration,
         ))
+        new_id = db.last_id(cursor)
         db.commit()
-        return json_success(id=db.last_id(cursor))
+        return json_success(id=new_id)
+    except Exception as e:
+        db.rollback()
+        print("ERRO AO CRIAR SERVIÇO:", e)
+        return json_error(f"Erro ao criar serviço: {e}", 500)
     finally:
         db.close()
 
@@ -771,6 +778,43 @@ def toggle_servico(service_id):
         return json_success(active=novo)
     finally:
         db.close()
+
+@app.route("/api/servicos/<int:service_id>", methods=["DELETE"])
+@login_required
+def excluir_servico(service_id):
+    db = get_db()
+    try:
+        # Verifica se o serviço existe
+        service = db.execute(
+            "SELECT id FROM services WHERE id = ?",
+            (service_id,)
+        ).fetchone()
+
+        if not service:
+            return json_error("Serviço não encontrado.", 404)
+
+        # Verifica se tem agendamento usando este serviço
+        usado = db.execute(
+            "SELECT COUNT(*) AS total FROM appointments WHERE service_id = ?",
+            (service_id,)
+        ).fetchone()["total"]
+
+        if usado > 0:
+            return json_error(
+                f"Não é possível apagar. Este serviço tem {usado} agendamento(s) vinculado(s). "
+                "Desative o serviço em vez de apagar.",
+                409
+            )
+
+        db.execute("DELETE FROM services WHERE id = ?", (service_id,))
+        db.commit()
+        return json_success(message="Serviço excluído.")
+    except Exception as e:
+        db.rollback()
+        print("ERRO AO EXCLUIR SERVIÇO:", e)
+        return json_error(f"Erro ao excluir serviço: {e}", 500)
+    finally:
+        db.close()        
 
 
 # =========================================================

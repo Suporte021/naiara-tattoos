@@ -1912,6 +1912,31 @@ async function toggleServico(id) {
     }
 }
 
+async function excluirServico(id) {
+    if (!confirm(
+        "Tem certeza que deseja APAGAR este serviço?\n\n" +
+        "Essa ação não pode ser desfeita.\n" +
+        "Se o serviço tiver agendamentos, não será possível apagar."
+    )) return;
+
+    try {
+        const res = await fetch(`/api/servicos/${id}`, {
+            method: "DELETE"
+        });
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+            alert(data.error || "Erro ao apagar serviço.");
+            return;
+        }
+
+        await carregarServicos();
+        alert("Serviço apagado com sucesso ✅");
+    } catch (e) {
+        console.error(e);
+        alert("Erro de conexão.");
+    }
+}
 
 /* =========================================================
    NOVO SERVIÇO
