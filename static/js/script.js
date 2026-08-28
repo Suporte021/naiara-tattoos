@@ -311,11 +311,9 @@ function renderServices() {
                                     )}
                                 </span>
 
-                                <span>
-                                    ${escapeHtml(
-                                        service.duration || ""
-                                    )}
-                                </span>
+                               <span>
+    ${service.duration ? escapeHtml(service.duration) + " min" : ""}
+</span>
 
                             </div>
 
@@ -359,10 +357,8 @@ function renderServices() {
                             <div class="meta">
 
                                 <span>
-                                    ${escapeHtml(
-                                        service.duration || ""
-                                    )}
-                                </span>
+    ${service.duration ? escapeHtml(service.duration) + " min" : ""}
+</span>
 
                             </div>
 
@@ -501,20 +497,10 @@ function renderizarServicosAgendamento() {
                             </div>
 
                             <div class="sub">
-                                ${escapeHtml(
-                                    service.category
-                                )}
-                                ·
-                                ${escapeHtml(
-                                    service.duration || ""
-                                )}
-                                ${
-                                    service.price
-                                        ? " · " +
-                                          escapeHtml(service.price)
-                                        : ""
-                                }
-                            </div>
+    ${escapeHtml(service.category)}
+    ${service.duration ? " · " + escapeHtml(service.duration) + " min" : ""}
+    ${service.price ? " · " + escapeHtml(service.price) : ""}
+</div>
 
                         </div>
 

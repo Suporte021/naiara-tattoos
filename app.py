@@ -492,7 +492,7 @@ def horarios_disponiveis():
 
         horarios = []
         now = datetime.now()
-        step = 30
+        step = max(15, duration)
         minute = start_m
 
         while minute + duration <= end_m:

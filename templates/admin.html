@@ -1221,6 +1221,30 @@ async function salvarConfig() {
    ========================================================= */
 carregarDashboard();
 carregarAgendamentos();
+
+/* =========================================================
+   ATUALIZAÇÃO AUTOMÁTICA (polling)
+   ========================================================= */
+function iniciarAtualizacaoAutomatica() {
+    setInterval(() => {
+        // Só atualiza se o usuário estiver em uma dessas abas
+        const viewAtiva = document.querySelector(".admin-view.active");
+        if (!viewAtiva) return;
+
+        const view = viewAtiva.dataset.view;
+
+        if (view === "dashboard") {
+            carregarDashboard();
+        }
+        if (view === "agenda" || view === "agendamentos") {
+            carregarAgendamentos();
+            carregarDashboard(); // atualiza os números também
+        }
+    }, 20000); // 20 segundos
+}
+
+// Inicia o polling quando a página carregar
+iniciarAtualizacaoAutomatica();
 </script>
 </body>
 </html>
